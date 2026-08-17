@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Coral — Visual Comparison</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06070c;
+    --bg-2: #0a0c14;
+    --panel: rgba(255,255,255,0.045);
+    --panel-solid: #12141c;
+    --panel-2: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.09);
+    --border-strong: rgba(255,255,255,0.16);
+    --text: #f3f4f8;
+    --text-dim: #9aa1b8;
+    --text-faint: #676e85;
+    --accent-1: #f86f6f;
+    --accent-2: #ff9a66;
+    --accent-3: #ffc773;
+    --accent-grad: linear-gradient(120deg, var(--accent-1), var(--accent-2));
+    --accent-grad-3: linear-gradient(120deg, var(--accent-1), var(--accent-2) 55%, var(--accent-3));
+    --good: #34e6a8;
+    --danger: #ff3d6b;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+    --shadow-glow: 0 8px 30px rgba(248,111,111,0.32);
+    --shadow-soft: 0 10px 40px rgba(0,0,0,0.35);
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg: #f3f4fb;
+    --bg-2: #eceefa;
+    --panel: rgba(255,255,255,0.7);
+    --panel-solid: #ffffff;
+    --panel-2: rgba(20,20,40,0.045);
+    --border: rgba(20,20,43,0.09);
+    --border-strong: rgba(20,20,43,0.16);
+    --text: #14151f;
+    --text-dim: #5b6076;
+    --text-faint: #8a90a6;
+    --accent-1: #f2585a;
+    --accent-2: #f0854f;
+    --accent-3: #e8a94a;
+    --good: #0fae7a;
+    --danger: #e0335f;
+    --shadow-glow: 0 8px 30px rgba(248,111,111,0.22);
+    --shadow-soft: 0 10px 30px rgba(20,20,60,0.08);
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    transition: background 0.4s var(--ease), color 0.4s var(--ease);
+  }
+
+  /* ---------- Ambient background ---------- */
+  .aura {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .aura span {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.5;
+    animation: drift 26s ease-in-out infinite alternate;
+  }
+  :root[data-theme="light"] .aura span { opacity: 0.35; }
+  .aura span:nth-child(1) {
+    width: 520px; height: 520px;
+    background: var(--accent-1);
+    top: -160px; left: -120px;
+    animation-delay: 0s;
+  }
+  .aura span:nth-child(2) {
+    width: 460px; height: 460px;
+    background: var(--accent-2);
+    top: 10%; right: -160px;
+    animation-delay: -8s;
+  }
+  .aura span:nth-child(3) {
+    width: 420px; height: 420px;
+    background: var(--accent-3);
+    bottom: -180px; left: 30%;
+    animation-delay: -16s;
+  }
+  @keyframes drift {
+    0% { transform: translate(0,0) scale(1); }
+    100% { transform: translate(40px,50px) scale(1.12); }
+  }
+
+  ::selection { background: var(--accent-1); color: #fff; }
+
+  /* ---------- Layout ---------- */
+  header.top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 56px 32px 44px;
+    max-width: 1180px;
+    margin: 0 auto;
+    gap: 40px;
+  }
+  .hero-copy { display: flex; flex-direction: column; min-width: 0; }
+  .hero-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+  .brand { display: flex; align-items: center; gap: 15px; margin-bottom: 14px; }
+  .brand-mark {
+    width: 46px; height: 46px;
+    border-radius: 13px;
+    background: var(--accent-grad-3);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-glow);
+    flex-shrink: 0;
+  }
+  .brand-mark svg { width: 23px; height: 23px; }
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin: 0 0 7px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-grad);
+    box-shadow: var(--shadow-glow);
+    flex-shrink: 0;
+  }
+  h1.title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    background: var(--accent-grad-3);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1.05;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 15.5px;
+    margin: 14px 0 0;
+    max-width: 440px;
+    line-height: 1.6;
+  }
+  .subtitle strong { color: var(--text); font-weight: 600; }
+
+  /* Hero illustration */
+  .hero-illustration { width: 340px; max-width: 42vw; line-height: 0; }
+  .hero-illustration svg { width: 100%; height: auto; display: block; }
+  @media (max-width: 980px) { .hero-illustration { display: none; } }
+
+  /* Theme toggle */
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    border-radius: 100px;
+    padding: 4px;
+    flex-shrink: 0;
+  }
+  .theme-toggle button {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: none;
+    color: var(--text-faint);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+  }
+  .theme-toggle button.active {
+    background: var(--accent-grad);
+    color: #fff;
+    box-shadow: var(--shadow-glow);
+  }
+  .theme-toggle svg { width: 16px; height: 16px; }
+
+  main {
+    padding: 34px 32px 70px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(24px);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    box-shadow: var(--shadow-soft);
+  }
+  .card + .card { margin-top: 16px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label svg { width: 13px; height: 13px; }
+
+  /* ---------- Dropzones ---------- */
+  .dropzone {
+    background: var(--panel-2);
+    border: 1.5px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+    padding: 26px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s var(--ease);
+    position: relative;
+    min-height: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .dropzone:hover, .dropzone.drag {
+    border-color: var(--accent-1);
+    background: rgba(248,111,111,0.08);
+  }
+  .dropzone svg.upload-icon { width: 26px; height: 26px; color: var(--text-faint); }
+  .dropzone img {
+    max-width: 100%;
+    max-height: 220px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-soft);
+  }
+  .dropzone .label { font-size: 13px; color: var(--text-dim); font-weight: 500; }
+  .dropzone .sub { font-size: 11.5px; color: var(--text-faint); }
+  .dropzone .filename { font-size: 12px; color: var(--text); word-break: break-all; }
+  input[type="file"] { display: none; }
+
+  .field-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+    margin: 0 0 7px;
+    display: block;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 11px 14px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 13.5px;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  }
+  input[type="text"]:focus, input[type="password"]:focus {
+    outline: none;
+    border-color: var(--accent-1);
+    box-shadow: 0 0 0 3px rgba(248,111,111,0.18);
+  }
+  input[type="text"]::placeholder, input[type="password"]::placeholder { color: var(--text-faint); }
+  .row { margin-bottom: 16px; }
+  .row:last-child { margin-bottom: 0; }
+
+  .btn {
+    font-family: 'Inter', sans-serif;
+    border: none;
+    padding: 11px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s var(--ease);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn.primary {
+    background: var(--accent-grad);
+    color: #fff;
+    box-shadow: var(--shadow-glow);
+  }
+  .btn.primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 12px 34px rgba(248,111,111,0.4); }
+  .btn.secondary {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn.secondary:hover:not(:disabled) { border-color: var(--border-strong); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+  .actions { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; align-items: center; }
+
+  .hint { font-size: 12px; color: var(--text-faint); margin-top: 8px; line-height: 1.55; }
+  .hint label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .hint input[type="checkbox"] { width: auto; accent-color: var(--accent-1); }
+
+  .note-box {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 13px 16px;
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height: 1.65;
+    margin-bottom: 18px;
+    display: flex;
+    gap: 10px;
+  }
+  .note-box svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; color: var(--accent-2); }
+  .note-box b { color: var(--text); font-weight: 600; }
+
+  /* ---------- Source picker (upload / link / figma toggle) ---------- */
+  .source-card { display: flex; flex-direction: column; }
+  .source-toggle {
+    display: inline-flex;
+    gap: 2px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 3px;
+    margin-bottom: 12px;
+    align-self: flex-start;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .source-btn {
+    border: none;
+    background: none;
+    color: var(--text-dim);
+    font-size: 11.5px;
+    font-weight: 500;
+    padding: 6px 13px;
+    border-radius: 100px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.25s var(--ease);
+  }
+  .source-btn.active { background: var(--accent-grad); color: #fff; box-shadow: var(--shadow-glow); }
+  .source-mode > * + * { margin-top: 8px; }
+  .field-hint { font-size: 11.5px; color: var(--text-faint); margin-top: 7px; line-height: 1.5; }
+  .url-status {
+    font-size: 12px;
+    margin-top: 9px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 18px;
+  }
+  .url-status.error { color: var(--danger); }
+  .url-status img { max-height: 34px; border-radius: 6px; box-shadow: var(--shadow-soft); }
+
+  .divider-or {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-faint);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 18px 0;
+  }
+  .divider-or::before, .divider-or::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .error {
+    background: rgba(255,77,125,0.08);
+    border: 1px solid rgba(255,77,125,0.3);
+    color: var(--danger);
+    padding: 11px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 12.5px;
+    margin-top: 14px;
+    display: none;
+    line-height: 1.55;
+  }
+  .error.show { display: block; }
+
+  /* ---------- Results ---------- */
+  .result { margin-top: 22px; }
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .mode-switch {
+    position: relative;
+    display: inline-flex;
+    gap: 2px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 4px;
+  }
+  .mode-indicator {
+    position: absolute;
+    top: 4px; bottom: 4px;
+    border-radius: 100px;
+    background: var(--accent-grad);
+    transition: left 0.3s var(--ease), width 0.3s var(--ease);
+    z-index: 0;
+  }
+  .mode-switch button {
+    position: relative;
+    z-index: 1;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: color 0.3s var(--ease);
+  }
+  .mode-switch button.active { color: #fff; }
+
+  .result-header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .stats {
+    display: flex;
+    gap: 18px;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .stats b { color: var(--text); font-weight: 500; }
+
+  .stage {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+  }
+  .canvas-wrap { position: relative; max-width: 100%; margin: 0 auto; line-height: 0; }
+  canvas { max-width: 100%; height: auto; display: block; border-radius: 10px; }
+
+  .slider-wrap { position: relative; max-width: 100%; margin: 0 auto; user-select: none; border-radius: 10px; overflow: hidden; }
+  .slider-wrap .top-canvas { position: absolute; top: 0; left: 0; clip-path: inset(0 50% 0 0); }
+  .slider-handle {
+    position: absolute; top: 0; bottom: 0; left: 50%;
+    width: 3px; background: var(--accent-grad);
+    cursor: ew-resize; transform: translateX(-1.5px);
+  }
+  .slider-handle::after {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    width: 38px; height: 38px; background: var(--accent-grad);
+    border-radius: 50%; transform: translate(-50%, -50%);
+    box-shadow: var(--shadow-glow);
+  }
+  .slider-handle::before {
+    content: '↔'; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); z-index: 2;
+    color: #fff; font-size: 16px; font-weight: 700;
+  }
+  .side-by-side { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .side-by-side figure { margin: 0; }
+  .side-by-side figcaption {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.05em;
+    color: var(--text-faint); text-align: center; margin-top: 8px; text-transform: uppercase;
+  }
+
+  .control-row { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--text-dim); margin-bottom: 14px; flex-wrap: wrap; }
+  input[type="range"] {
+    -webkit-appearance: none;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--border-strong);
+    flex: 1;
+    max-width: 220px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent-grad);
+    box-shadow: var(--shadow-glow);
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px; height: 16px; border: none; border-radius: 50%;
+    background: var(--accent-grad); box-shadow: var(--shadow-glow); cursor: pointer;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ---------- Findings panel ---------- */
+  .findings { margin-top: 16px; }
+  .findings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .findings-summary { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sev-chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .sev-chip.major { background: rgba(255,61,107,0.14); color: var(--danger); }
+  .sev-chip.moderate { background: rgba(255,154,102,0.14); color: var(--accent-2); }
+  .sev-chip.minor { background: rgba(255,199,115,0.16); color: var(--accent-3); }
+  .findings-empty {
+    font-size: 12.5px;
+    color: var(--text-faint);
+    padding: 16px;
+    text-align: center;
+    background: var(--panel-2);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+  }
+  .findings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 340px;
+    overflow-y: auto;
+    padding-right: 2px;
+  }
+  .finding-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    background: var(--panel-2);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+  }
+  .finding-item:hover { border-color: var(--border-strong); }
+  .finding-item.selected { border-color: var(--accent-1); background: rgba(248,111,111,0.09); }
+  .finding-num {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: #0a0a0f;
+  }
+  .finding-num.sev-major { background: var(--danger); }
+  .finding-num.sev-moderate { background: var(--accent-2); }
+  .finding-num.sev-minor { background: var(--accent-3); }
+  .finding-swatches { display: flex; flex-shrink: 0; }
+  .finding-swatches .swatch {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--panel-solid);
+  }
+  .finding-swatches .swatch + .swatch { margin-left: -6px; }
+  .finding-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .finding-label { font-size: 13px; font-weight: 500; color: var(--text); }
+  .finding-meta { font-size: 11px; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
+
+  footer {
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 11.5px;
+    padding: 30px 20px 50px;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    header.top { flex-direction: column; align-items: stretch; padding: 40px 24px 28px; }
+    .hero-side { flex-direction: row; align-items: center; justify-content: flex-end; }
+    h1.title { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="aura"><span></span><span></span><span></span></div>
+
+<header class="top">
+  <div class="hero-copy">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.4" stroke="white" stroke-width="1.6"/><path d="M12 3.6 A8.4 8.4 0 0 0 12 20.4 Z" fill="white"/></svg>
+      </div>
+      <div>
+        <p class="eyebrow">Visual comparison</p>
+        <h1 class="title">Coral</h1>
+      </div>
+    </div>
+    <p class="subtitle"><strong>See exactly what changed.</strong> Compare screenshots, live URLs, or Figma frames — with a slider, overlay, and pixel-accurate diff.</p>
+  </div>
+  <div class="hero-side">
+    <div class="theme-toggle" id="theme-toggle">
+      <button id="theme-dark" title="Dark mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+      </button>
+      <button id="theme-light" title="Light mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
+      </button>
+    </div>
+    <div class="hero-illustration" aria-hidden="true">
+      <svg viewBox="0 0 340 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="heroGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="var(--accent-1)"/>
+            <stop offset="55%" stop-color="var(--accent-2)"/>
+            <stop offset="100%" stop-color="var(--accent-3)"/>
+          </linearGradient>
+          <filter id="heroShadow" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.28"/>
+          </filter>
+        </defs>
+
+        <ellipse cx="175" cy="105" rx="165" ry="90" fill="var(--accent-1)" opacity="0.09"/>
+        <ellipse cx="250" cy="55" rx="95" ry="60" fill="var(--accent-3)" opacity="0.08"/>
+
+        <!-- back card ("before") -->
+        <g filter="url(#heroShadow)">
+          <rect x="18" y="44" width="232" height="132" rx="16" fill="var(--panel-2)" stroke="var(--border-strong)"/>
+        </g>
+        <circle cx="38" cy="63" r="3.4" fill="#ff5f57"/>
+        <circle cx="49" cy="63" r="3.4" fill="#febc2e"/>
+        <circle cx="60" cy="63" r="3.4" fill="#28c840"/>
+        <rect x="76" y="58" width="114" height="10" rx="5" fill="var(--panel)" stroke="var(--border)"/>
+        <rect x="38" y="86" width="150" height="9" rx="4.5" fill="var(--border-strong)" opacity="0.55"/>
+        <rect x="38" y="102" width="104" height="9" rx="4.5" fill="var(--border-strong)" opacity="0.4"/>
+        <rect x="38" y="122" width="72" height="24" rx="8" fill="var(--border-strong)" opacity="0.3"/>
+
+        <!-- front card ("after") -->
+        <g filter="url(#heroShadow)">
+          <rect x="72" y="16" width="250" height="142" rx="18" fill="var(--panel-solid)" stroke="var(--border-strong)"/>
+        </g>
+        <circle cx="94" cy="37" r="3.4" fill="#ff5f57"/>
+        <circle cx="105" cy="37" r="3.4" fill="#febc2e"/>
+        <circle cx="116" cy="37" r="3.4" fill="#28c840"/>
+        <rect x="132" y="32" width="134" height="10" rx="5" fill="var(--panel-2)" stroke="var(--border)"/>
+        <rect x="94" y="58" width="172" height="9" rx="4.5" fill="var(--border-strong)" opacity="0.9"/>
+        <rect x="94" y="76" width="112" height="9" rx="4.5" fill="var(--border-strong)" opacity="0.65"/>
+        <rect x="94" y="97" width="92" height="27" rx="9" fill="url(#heroGrad)"/>
+
+        <!-- comparison slider -->
+        <g filter="url(#heroShadow)">
+          <line x1="255" y1="24" x2="255" y2="150" stroke="url(#heroGrad)" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="255" cy="88" r="15" fill="url(#heroGrad)"/>
+        </g>
+        <path d="M247 88h16M250.4 82.6l-5.4 5.4 5.4 5.4M259.6 82.6l5.4 5.4-5.4 5.4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <!-- diff pins -->
+        <circle cx="303" cy="41" r="18" fill="var(--danger)" opacity="0.16"/>
+        <g filter="url(#heroShadow)"><circle cx="303" cy="41" r="13" fill="var(--danger)"/></g>
+        <text x="303" y="45.5" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" fill="#fff">1</text>
+
+        <circle cx="36" cy="170" r="18" fill="var(--accent-3)" opacity="0.18"/>
+        <g filter="url(#heroShadow)"><circle cx="36" cy="170" r="13" fill="var(--accent-3)"/></g>
+        <text x="36" y="174.5" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" fill="#0a0a0f">2</text>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- COMPARE: each side independently picks Upload / Link / Figma directly -->
+  <section class="card" id="panel-compare">
+    <div class="grid-2">
+      <div class="source-card" data-side="a">
+        <p class="field-label">Image A</p>
+        <div class="source-toggle">
+          <button type="button" class="source-btn active" data-mode="upload">Upload</button>
+          <button type="button" class="source-btn" data-mode="url">Link</button>
+          <button type="button" class="source-btn" data-mode="figma">Figma directly</button>
+        </div>
+
+        <div class="source-mode" data-mode-panel="upload">
+          <div class="dropzone" id="drop-a">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+            <div class="label" id="drop-a-label">Drop image A, or click to browse</div>
+            <input type="file" id="file-a" accept="image/*" />
+          </div>
+        </div>
+
+        <div class="source-mode" data-mode-panel="url" style="display:none;">
+          <input type="text" class="source-url-input" placeholder="https://example.com/before.png" />
+          <div class="field-hint">Fetched through Coral's backend — cross-origin hosts are fine.</div>
+        </div>
+
+        <div class="source-mode" data-mode-panel="figma" style="display:none;">
+          <input type="text" class="figma-frame-url" placeholder="Figma frame URL — right-click a frame → Copy link to selection" />
+          <input type="password" class="figma-token" placeholder="figd_... personal access token" />
+          <div class="hint"><label><input type="checkbox" class="figma-remember" /> Remember token in this browser</label></div>
+          <button type="button" class="btn secondary figma-fetch-btn">Fetch frame</button>
+        </div>
+
+        <div class="url-status"></div>
+      </div>
+
+      <div class="source-card" data-side="b">
+        <p class="field-label">Image B</p>
+        <div class="source-toggle">
+          <button type="button" class="source-btn active" data-mode="upload">Upload</button>
+          <button type="button" class="source-btn" data-mode="url">Link</button>
+        </div>
+
+        <div class="source-mode" data-mode-panel="upload">
+          <div class="dropzone" id="drop-b">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+            <div class="label" id="drop-b-label">Drop image B, or click to browse</div>
+            <input type="file" id="file-b" accept="image/*" />
+          </div>
+        </div>
+
+        <div class="source-mode" data-mode-panel="url" style="display:none;">
+          <input type="text" class="source-url-input" placeholder="https://example.com/after.png" />
+          <div class="field-hint">Fetched through Coral's backend — cross-origin hosts are fine.</div>
+        </div>
+
+        <div class="url-status"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="compare-btn" disabled>Compare</button>
+      <button class="btn secondary" id="reset-btn">Reset</button>
+    </div>
+    <div class="error" id="compare-error"></div>
+  </section>
+
+  <!-- SHARED RESULT AREA -->
+  <div class="result" id="result-area" style="display:none;">
+    <div class="card" style="padding:20px 22px;">
+      <div class="result-header">
+        <div class="mode-switch" id="mode-switch">
+          <div class="mode-indicator" id="mode-indicator"></div>
+          <button class="mode-btn active" data-mode="slider">Slider</button>
+          <button class="mode-btn" data-mode="side">Side by side</button>
+          <button class="mode-btn" data-mode="overlay">Overlay</button>
+          <button class="mode-btn" data-mode="heatmap">Diff heatmap</button>
+        </div>
+        <div class="result-header-right">
+          <div class="stats" id="stats-line"></div>
+          <label class="hint" style="margin:0;"><input type="checkbox" id="toggle-markers" checked /> Markers</label>
+        </div>
+      </div>
+
+      <div class="control-row" id="overlay-controls" style="display:none;">
+        <span>Blend</span>
+        <input type="range" id="overlay-opacity" min="0" max="100" value="50" />
+      </div>
+      <div class="control-row" id="heatmap-controls" style="display:none;">
+        <span>Sensitivity</span>
+        <input type="range" id="heatmap-threshold" min="1" max="100" value="20" />
+        <span class="badge" id="heatmap-threshold-label">20</span>
+      </div>
+
+      <div class="stage">
+        <div class="slider-wrap" id="view-slider">
+          <canvas id="canvas-bottom"></canvas>
+          <canvas class="top-canvas" id="canvas-top"></canvas>
+          <div class="slider-handle" id="slider-handle"></div>
+        </div>
+
+        <div class="side-by-side" id="view-side" style="display:none;">
+          <figure><canvas id="canvas-side-a"></canvas><figcaption>A</figcaption></figure>
+          <figure><canvas id="canvas-side-b"></canvas><figcaption>B</figcaption></figure>
+        </div>
+
+        <div class="canvas-wrap" id="view-overlay" style="display:none;">
+          <canvas id="canvas-overlay-base"></canvas>
+          <canvas id="canvas-overlay-top" style="position:absolute; top:0; left:0;"></canvas>
+        </div>
+
+        <div class="canvas-wrap" id="view-heatmap" style="display:none;">
+          <canvas id="canvas-heatmap"></canvas>
+        </div>
+      </div>
+
+      <div class="findings" id="findings-panel" style="display:none;">
+        <div class="findings-header">
+          <p class="section-label" style="margin:0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+            What's different
+          </p>
+          <div class="findings-summary" id="findings-summary"></div>
+        </div>
+        <div class="findings-empty" id="findings-empty" style="display:none;">No meaningful differences detected at this sensitivity.</div>
+        <div class="findings-list" id="findings-list"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn secondary" id="download-btn">Download current view</button>
+        <button class="btn secondary" id="copy-report-btn">Copy findings as text</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Images you upload stay in your browser. URLs and Figma frames are fetched through Coral's own backend proxy so cross-origin hosts work — nothing is stored on the server, there's no database, and every request is stateless.
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- Theme ----------
+  const root = document.documentElement;
+  const themeDarkBtn = document.getElementById("theme-dark");
+  const themeLightBtn = document.getElementById("theme-light");
+
+  function applyTheme(theme) {
+    root.setAttribute("data-theme", theme);
+    themeDarkBtn.classList.toggle("active", theme === "dark");
+    themeLightBtn.classList.toggle("active", theme === "light");
+    try { localStorage.setItem("coral_theme", theme); } catch (e) {}
+  }
+  (function initTheme() {
+    let saved = null;
+    try { saved = localStorage.getItem("coral_theme"); } catch (e) {}
+    if (!saved) saved = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    applyTheme(saved);
+  })();
+  themeDarkBtn.addEventListener("click", function () { applyTheme("dark"); });
+  themeLightBtn.addEventListener("click", function () { applyTheme("light"); });
+
+  // ---------- State ----------
+  let imgA = null;
+  let imgB = null;
+  let currentMode = "slider";
+  let diffRegions = [];
+  let selectedRegionId = null;
+  let showMarkers = true;
+
+  // ---------- Helpers ----------
+  function showError(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.classList.add("show");
+  }
+  function clearError(id) {
+    const el = document.getElementById(id);
+    el.textContent = "";
+    el.classList.remove("show");
+  }
+
+  function loadImageFromFile(file) {
+    return new Promise(function (resolve, reject) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () { resolve(img); };
+        img.onerror = function () { reject(new Error("Could not decode image file.")); };
+        img.src = e.target.result;
+      };
+      reader.onerror = function () { reject(new Error("Could not read file.")); };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Routed through the backend proxy (see server.js /api/fetch-image) so
+  // cross-origin hosts no longer taint the canvas — the browser only ever
+  // sees a same-origin blob.
+  function loadImageFromUrl(url) {
+    const proxied = "/api/fetch-image?url=" + encodeURIComponent(url);
+    return fetch(proxied).then(function (res) {
+      if (!res.ok) {
+        return res.json().catch(function () { return {}; }).then(function (body) {
+          throw new Error(body.error || ("Could not load image (server returned " + res.status + ")."));
+        });
+      }
+      return res.blob();
+    }).then(function (blob) {
+      return new Promise(function (resolve, reject) {
+        const img = new Image();
+        const objectUrl = URL.createObjectURL(blob);
+        img.onload = function () { resolve(img); };
+        img.onerror = function () { reject(new Error("Could not decode the fetched image.")); };
+        img.src = objectUrl;
+      });
+    });
+  }
+
+  function setupDropzone(zoneId, inputId, labelId, onFile, onError) {
+    const zone = document.getElementById(zoneId);
+    const input = document.getElementById(inputId);
+    zone.addEventListener("click", function () { input.click(); });
+    zone.addEventListener("dragover", function (e) { e.preventDefault(); zone.classList.add("drag"); });
+    zone.addEventListener("dragleave", function () { zone.classList.remove("drag"); });
+    zone.addEventListener("drop", function (e) {
+      e.preventDefault();
+      zone.classList.remove("drag");
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+    });
+    input.addEventListener("change", function () {
+      if (input.files && input.files[0]) handleFile(input.files[0]);
+    });
+    function handleFile(file) {
+      loadImageFromFile(file).then(function (img) {
+        zone.innerHTML = "";
+        const preview = document.createElement("img");
+        preview.src = img.src;
+        const name = document.createElement("div");
+        name.className = "filename";
+        name.textContent = file.name + "  ·  " + img.naturalWidth + "×" + img.naturalHeight;
+        zone.appendChild(preview);
+        zone.appendChild(name);
+        zone.appendChild(input);
+        onFile(img);
+      }).catch(function (err) {
+        if (onError) onError(err.message);
+      });
+    }
+  }
+
+  function resetDropzone(zoneId, inputId, labelId, placeholderText, onFile, onError) {
+    document.getElementById(zoneId).innerHTML =
+      '<svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>' +
+      '<div class="label" id="' + labelId + '">' + placeholderText + '</div>' +
+      '<input type="file" id="' + inputId + '" accept="image/*" />';
+    setupDropzone(zoneId, inputId, labelId, onFile, onError);
+  }
+
+  // ---------- Shared Figma logic ----------
+  function parseFigmaUrl(url) {
+    const fileMatch = url.match(/figma\.com\/(?:file|design)\/([a-zA-Z0-9]+)/);
+    if (!fileMatch) return null;
+    const fileKey = fileMatch[1];
+    let nodeId = null;
+    const nodeMatch = url.match(/node-id=([^&]+)/);
+    if (nodeMatch) nodeId = decodeURIComponent(nodeMatch[1]).replace(/-/g, ":");
+    return { fileKey: fileKey, nodeId: nodeId };
+  }
+
+  // Routed through the backend proxy (see server.js /api/figma/frame) so the
+  // personal access token is only ever sent to our own server, not held in a
+  // cross-origin request from the browser.
+  function fetchFigmaFrame(url, token) {
+    const parsed = parseFigmaUrl(url);
+    if (!parsed || !parsed.nodeId) {
+      return Promise.reject(new Error('Couldn\'t parse a file key and node-id from that URL. Select a frame in Figma, right-click, and choose "Copy link to selection".'));
+    }
+    return fetch("/api/figma/frame", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ figmaUrl: url, token: token })
+    }).then(function (res) {
+      if (!res.ok) {
+        return res.json().catch(function () { return {}; }).then(function (body) {
+          throw new Error(body.error || ("Figma request failed (" + res.status + ")."));
+        });
+      }
+      return res.blob();
+    }).then(function (blob) {
+      return new Promise(function (resolve, reject) {
+        const img = new Image();
+        const objectUrl = URL.createObjectURL(blob);
+        img.onload = function () { resolve(img); };
+        img.onerror = function () { reject(new Error("Could not decode the frame image.")); };
+        img.src = objectUrl;
+      });
+    });
+  }
+
+  // Wires one Image A/B card: a 3-way Upload / Link / Figma-directly toggle
+  // that all funnel into the same resolved-image state, so it doesn't matter
+  // which method produced the image the rest of the app works with.
+  function setupImageSource(side, onChange) {
+    const card = document.querySelector('.source-card[data-side="' + side + '"]');
+    const modeBtns = card.querySelectorAll(".source-btn");
+    const panels = {
+      upload: card.querySelector('[data-mode-panel="upload"]'),
+      url: card.querySelector('[data-mode-panel="url"]'),
+      figma: card.querySelector('[data-mode-panel="figma"]') // absent on sides with no Figma option
+    };
+    const hasFigma = !!panels.figma;
+    const status = card.querySelector(".url-status");
+    const dropZone = card.querySelector(".dropzone");
+    const fileInput = dropZone.querySelector('input[type="file"]');
+    const dropLabel = dropZone.querySelector(".label");
+    const dropPlaceholder = dropLabel.textContent;
+    const urlInput = panels.url.querySelector(".source-url-input");
+    const figmaUrlInput = hasFigma ? panels.figma.querySelector(".figma-frame-url") : null;
+    const figmaTokenInput = hasFigma ? panels.figma.querySelector(".figma-token") : null;
+    const figmaRememberInput = hasFigma ? panels.figma.querySelector(".figma-remember") : null;
+    const figmaFetchBtn = hasFigma ? panels.figma.querySelector(".figma-fetch-btn") : null;
+
+    let resolvedImg = null;
+    let debounceTimer = null;
+
+    if (hasFigma) {
+      try {
+        const savedToken = localStorage.getItem("coral_figma_token");
+        if (savedToken) { figmaTokenInput.value = savedToken; figmaRememberInput.checked = true; }
+      } catch (e) {}
+    }
+
+    function setMode(mode) {
+      modeBtns.forEach(function (b) { b.classList.toggle("active", b.dataset.mode === mode); });
+      Object.keys(panels).forEach(function (m) {
+        if (panels[m]) panels[m].style.display = (m === mode) ? "" : "none";
+      });
+    }
+    modeBtns.forEach(function (b) {
+      b.addEventListener("click", function () { setMode(b.dataset.mode); });
+    });
+
+    function setStatus(html, isError) {
+      status.innerHTML = html || "";
+      status.classList.toggle("error", !!isError);
+    }
+    function setResolved(img) {
+      resolvedImg = img;
+      onChange(img);
+    }
+    function statusForImage(img) {
+      return '<img src="' + img.src + '" alt="" /><span>' + img.naturalWidth + '×' + img.naturalHeight + ' loaded ✓</span>';
+    }
+
+    setupDropzone(dropZone.id, fileInput.id, dropLabel.id, function (img) {
+      setStatus("");
+      setResolved(img);
+    }, function (msg) {
+      setResolved(null);
+      setStatus(msg, true);
+    });
+
+    urlInput.addEventListener("input", function () {
+      clearTimeout(debounceTimer);
+      const val = urlInput.value.trim();
+      setStatus("");
+      if (!val) { setResolved(null); return; }
+      debounceTimer = setTimeout(function () {
+        setStatus("Loading…");
+        loadImageFromUrl(val).then(function (img) {
+          setResolved(img);
+          setStatus(statusForImage(img));
+        }).catch(function (err) {
+          setResolved(null);
+          setStatus(err.message, true);
+        });
+      }, 550);
+    });
+
+    if (hasFigma) {
+      figmaFetchBtn.addEventListener("click", function () {
+        const url = figmaUrlInput.value.trim();
+        const token = figmaTokenInput.value.trim();
+        if (!url || !token) { setStatus("Enter both a Figma frame URL and a personal access token.", true); return; }
+        try {
+          if (figmaRememberInput.checked) localStorage.setItem("coral_figma_token", token);
+          else localStorage.removeItem("coral_figma_token");
+        } catch (e) {}
+        figmaFetchBtn.disabled = true; figmaFetchBtn.textContent = "Fetching...";
+        setStatus("Loading…");
+        fetchFigmaFrame(url, token).then(function (img) {
+          setResolved(img);
+          setStatus(statusForImage(img));
+          figmaFetchBtn.textContent = "Frame loaded ✓";
+        }).catch(function (err) {
+          setResolved(null);
+          setStatus(err.message, true);
+          figmaFetchBtn.textContent = "Fetch frame";
+        }).finally(function () { figmaFetchBtn.disabled = false; });
+      });
+    }
+
+    setMode("upload");
+
+    return {
+      getImage: function () { return resolvedImg; },
+      reset: function () {
+        resolvedImg = null;
+        urlInput.value = "";
+        setStatus("");
+        if (hasFigma) { figmaUrlInput.value = ""; figmaFetchBtn.textContent = "Fetch frame"; }
+        resetDropzone(dropZone.id, fileInput.id, dropLabel.id, dropPlaceholder, function (img) {
+          setStatus("");
+          setResolved(img);
+        }, function (msg) {
+          setResolved(null);
+          setStatus(msg, true);
+        });
+        setMode("upload");
+      }
+    };
+  }
+
+  const sourceA = setupImageSource("a", function (img) { imgA = img; checkReady(); });
+  const sourceB = setupImageSource("b", function (img) { imgB = img; checkReady(); });
+
+  function checkReady() {
+    document.getElementById("compare-btn").disabled = !(imgA && imgB);
+  }
+
+  document.getElementById("compare-btn").addEventListener("click", function () {
+    clearError("compare-error");
+    try { renderResult(imgA, imgB); } catch (err) { showError("compare-error", err.message); }
+  });
+
+  document.getElementById("reset-btn").addEventListener("click", function () {
+    sourceA.reset(); sourceB.reset();
+    imgA = null; imgB = null;
+    checkReady();
+    document.getElementById("result-area").style.display = "none";
+  });
+
+  // ---------- Core diff rendering ----------
+  let lastCanvasA = null;
+  let lastCanvasB = null;
+
+  function normalizeCanvases(a, b) {
+    const w = Math.max(a.naturalWidth || a.width, b.naturalWidth || b.width);
+    const h = Math.max(a.naturalHeight || a.height, b.naturalHeight || b.height);
+    const ca = document.createElement("canvas");
+    ca.width = w; ca.height = h;
+    const cb = document.createElement("canvas");
+    cb.width = w; cb.height = h;
+    const ctxA = ca.getContext("2d");
+    const ctxB = cb.getContext("2d");
+    ctxA.fillStyle = "#000"; ctxA.fillRect(0, 0, w, h);
+    ctxB.fillStyle = "#000"; ctxB.fillRect(0, 0, w, h);
+    ctxA.drawImage(a, 0, 0, a.naturalWidth || a.width, a.naturalHeight || a.height);
+    ctxB.drawImage(b, 0, 0, b.naturalWidth || b.width, b.naturalHeight || b.height);
+    return { ca: ca, cb: cb, w: w, h: h };
+  }
+
+  function renderResult(a, b) {
+    if (!a || !b) throw new Error("Both images are required.");
+    const norm = normalizeCanvases(a, b);
+    lastCanvasA = norm.ca;
+    lastCanvasB = norm.cb;
+    diffRegions = [];
+    selectedRegionId = null;
+
+    document.getElementById("result-area").style.display = "block";
+
+    const canvasBottom = document.getElementById("canvas-bottom");
+    const canvasTop = document.getElementById("canvas-top");
+    [canvasBottom, canvasTop].forEach(function (c) { c.width = norm.w; c.height = norm.h; });
+    canvasBottom.getContext("2d").drawImage(norm.cb, 0, 0);
+    canvasTop.getContext("2d").drawImage(norm.ca, 0, 0);
+
+    const sideA = document.getElementById("canvas-side-a");
+    const sideB = document.getElementById("canvas-side-b");
+    sideA.width = norm.w; sideA.height = norm.h;
+    sideB.width = norm.w; sideB.height = norm.h;
+    sideA.getContext("2d").drawImage(norm.ca, 0, 0);
+    sideB.getContext("2d").drawImage(norm.cb, 0, 0);
+
+    const overlayBase = document.getElementById("canvas-overlay-base");
+    const overlayTop = document.getElementById("canvas-overlay-top");
+    overlayBase.width = norm.w; overlayBase.height = norm.h;
+    overlayTop.width = norm.w; overlayTop.height = norm.h;
+    overlayBase.getContext("2d").drawImage(norm.ca, 0, 0);
+    overlayTop.getContext("2d").drawImage(norm.cb, 0, 0);
+    applyOverlayOpacity();
+
+    computeDiffAnalysis();
+
+    setMode(currentMode);
+    resetSlider();
+    document.getElementById("result-area").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function applyOverlayOpacity() {
+    const val = document.getElementById("overlay-opacity").value;
+    document.getElementById("canvas-overlay-top").style.opacity = (val / 100).toString();
+  }
+  document.getElementById("overlay-opacity").addEventListener("input", applyOverlayOpacity);
+
+  // ---------- Diff analysis: global heatmap + clustered regions ----------
+  // Groups the differing pixels into bounding boxes (on a downsampled grid,
+  // so large images stay fast), then samples the color inside each box on
+  // both sides to guess *why* it differs — missing element, color/style
+  // mismatch, or a layout/content shift. This is what turns "2.3% differ"
+  // into a numbered, actionable list.
+  function clusterDiffRegions(dataA, dataB, w, h, thresholdScaled) {
+    const step = Math.max(1, Math.round(Math.max(w, h) / 260));
+    const gw = Math.ceil(w / step);
+    const gh = Math.ceil(h / step);
+    const grid = new Uint8Array(gw * gh);
+    for (let gy = 0; gy < gh; gy++) {
+      for (let gx = 0; gx < gw; gx++) {
+        const px = Math.min(w - 1, gx * step);
+        const py = Math.min(h - 1, gy * step);
+        const i = (py * w + px) * 4;
+        const dr = Math.abs(dataA.data[i] - dataB.data[i]);
+        const dg = Math.abs(dataA.data[i + 1] - dataB.data[i + 1]);
+        const db = Math.abs(dataA.data[i + 2] - dataB.data[i + 2]);
+        if (dr + dg + db > thresholdScaled) grid[gy * gw + gx] = 1;
+      }
+    }
+    const visited = new Uint8Array(gw * gh);
+    const regions = [];
+    const dirs = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+    for (let gy = 0; gy < gh; gy++) {
+      for (let gx = 0; gx < gw; gx++) {
+        const idx = gy * gw + gx;
+        if (!grid[idx] || visited[idx]) continue;
+        let minX = gx, maxX = gx, minY = gy, maxY = gy;
+        const stack = [[gx, gy]];
+        visited[idx] = 1;
+        while (stack.length) {
+          const cur = stack.pop();
+          const cx = cur[0], cy = cur[1];
+          if (cx < minX) minX = cx;
+          if (cx > maxX) maxX = cx;
+          if (cy < minY) minY = cy;
+          if (cy > maxY) maxY = cy;
+          for (let d = 0; d < dirs.length; d++) {
+            const nx = cx + dirs[d][0], ny = cy + dirs[d][1];
+            if (nx < 0 || ny < 0 || nx >= gw || ny >= gh) continue;
+            const nIdx = ny * gw + nx;
+            if (grid[nIdx] && !visited[nIdx]) {
+              visited[nIdx] = 1;
+              stack.push([nx, ny]);
+            }
+          }
+        }
+        const x = minX * step;
+        const y = minY * step;
+        const rw = Math.min(w - x, (maxX - minX + 1) * step);
+        const rh = Math.min(h - y, (maxY - minY + 1) * step);
+        const areaFrac = (rw * rh) / (w * h);
+        if (areaFrac < 0.0006) continue; // drop antialiasing-scale noise flecks
+        regions.push({ x: x, y: y, w: rw, h: rh });
+      }
+    }
+    regions.sort(function (a, b) { return (b.w * b.h) - (a.w * a.h); });
+    return regions.slice(0, 40);
+  }
+
+  function classifyRegion(region, dataA, dataB, w) {
+    const x = region.x, y = region.y, rw = region.w, rh = region.h;
+    let sumAr = 0, sumAg = 0, sumAb = 0, sumBr = 0, sumBg = 0, sumBb = 0;
+    const lumA = [], lumB = [];
+    const stepX = Math.max(1, Math.floor(rw / 40));
+    const stepY = Math.max(1, Math.floor(rh / 40));
+    let n = 0;
+    for (let yy = y; yy < y + rh; yy += stepY) {
+      for (let xx = x; xx < x + rw; xx += stepX) {
+        const i = (yy * w + xx) * 4;
+        const ar = dataA.data[i], ag = dataA.data[i + 1], ab = dataA.data[i + 2];
+        const br = dataB.data[i], bg = dataB.data[i + 1], bb = dataB.data[i + 2];
+        sumAr += ar; sumAg += ag; sumAb += ab;
+        sumBr += br; sumBg += bg; sumBb += bb;
+        lumA.push((ar + ag + ab) / 3);
+        lumB.push((br + bg + bb) / 3);
+        n++;
+      }
+    }
+    if (!n) n = 1;
+    const meanA = [sumAr / n, sumAg / n, sumAb / n];
+    const meanB = [sumBr / n, sumBg / n, sumBb / n];
+    function stdDev(vals) {
+      const mean = vals.reduce(function (a, b) { return a + b; }, 0) / vals.length;
+      return Math.sqrt(vals.reduce(function (s, v) { return s + (v - mean) * (v - mean); }, 0) / vals.length);
+    }
+    const stdA = stdDev(lumA);
+    const stdB = stdDev(lumB);
+    const colorDist = Math.sqrt(
+      Math.pow(meanA[0] - meanB[0], 2) + Math.pow(meanA[1] - meanB[1], 2) + Math.pow(meanA[2] - meanB[2], 2)
+    );
+    const flatA = stdA < 9;
+    const flatB = stdB < 9;
+    let label;
+    if (flatA && !flatB) label = "Missing in A — present in B";
+    else if (flatB && !flatA) label = "Missing in B — present in A";
+    else if (colorDist > 45) label = "Color / style mismatch";
+    else label = "Position, size, or content shift";
+
+    function toHex(arr) {
+      return "#" + arr.map(function (v) {
+        return Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, "0");
+      }).join("");
+    }
+    return { label: label, colorA: toHex(meanA), colorB: toHex(meanB), colorDist: colorDist };
+  }
+
+  function computeDiffAnalysis() {
+    if (!lastCanvasA || !lastCanvasB) return;
+    const threshold = parseInt(document.getElementById("heatmap-threshold").value, 10);
+    document.getElementById("heatmap-threshold-label").textContent = threshold;
+    const w = lastCanvasA.width, h = lastCanvasA.height;
+    let dataA, dataB;
+    try {
+      dataA = lastCanvasA.getContext("2d").getImageData(0, 0, w, h);
+      dataB = lastCanvasB.getContext("2d").getImageData(0, 0, w, h);
+    } catch (e) {
+      document.getElementById("stats-line").innerHTML = '<span style="color:var(--danger);">Heatmap unavailable — cross-origin protected image data.</span>';
+      diffRegions = [];
+      renderFindingsList();
+      return;
+    }
+    const out = document.getElementById("canvas-heatmap");
+    out.width = w; out.height = h;
+    const outCtx = out.getContext("2d");
+    const outData = outCtx.createImageData(w, h);
+    let diffCount = 0;
+    const total = w * h;
+    const thresholdScaled = threshold * 3;
+    for (let i = 0; i < dataA.data.length; i += 4) {
+      const dr = Math.abs(dataA.data[i] - dataB.data[i]);
+      const dg = Math.abs(dataA.data[i + 1] - dataB.data[i + 1]);
+      const db = Math.abs(dataA.data[i + 2] - dataB.data[i + 2]);
+      const diffSum = dr + dg + db;
+      if (diffSum > thresholdScaled) {
+        outData.data[i] = 255; outData.data[i + 1] = 60; outData.data[i + 2] = 120; outData.data[i + 3] = 255;
+        diffCount++;
+      } else {
+        const gray = (dataA.data[i] + dataA.data[i + 1] + dataA.data[i + 2]) / 3;
+        outData.data[i] = gray * 0.4; outData.data[i + 1] = gray * 0.4; outData.data[i + 2] = gray * 0.4; outData.data[i + 3] = 255;
+      }
+    }
+    outCtx.putImageData(outData, 0, 0);
+    const pct = ((diffCount / total) * 100).toFixed(2);
+    document.getElementById("stats-line").innerHTML =
+      "<span><b>" + w + "×" + h + "</b> px</span>" +
+      "<span><b>" + pct + "%</b> differ</span>" +
+      "<span><b>" + diffCount.toLocaleString() + "</b> / " + total.toLocaleString() + "</span>";
+
+    const rawRegions = clusterDiffRegions(dataA, dataB, w, h, thresholdScaled);
+    const totalArea = w * h;
+    diffRegions = rawRegions.map(function (r, idx) {
+      const cls = classifyRegion(r, dataA, dataB, w);
+      const areaPct = (r.w * r.h / totalArea) * 100;
+      const severity = areaPct > 2 ? "major" : areaPct > 0.3 ? "moderate" : "minor";
+      return Object.assign({ id: idx + 1, areaPct: areaPct, severity: severity }, r, cls);
+    });
+
+    renderRegionMarkers();
+    renderFindingsList();
+  }
+  document.getElementById("heatmap-threshold").addEventListener("input", computeDiffAnalysis);
+
+  document.getElementById("toggle-markers").addEventListener("change", function () {
+    showMarkers = this.checked;
+    renderRegionMarkers();
+  });
+
+  // ---------- Region markers on the side-by-side canvases ----------
+  function severityColor(sev) {
+    const varName = sev === "major" ? "--danger" : sev === "moderate" ? "--accent-2" : "--accent-3";
+    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  }
+
+  function drawMarkersOnCanvas(canvas) {
+    const ctx = canvas.getContext("2d");
+    diffRegions.forEach(function (r) {
+      const color = severityColor(r.severity);
+      const isSelected = selectedRegionId === r.id;
+      ctx.lineWidth = isSelected ? 3.5 : 2;
+      ctx.strokeStyle = color;
+      ctx.strokeRect(r.x + 0.5, r.y + 0.5, r.w, r.h);
+      const label = String(r.id);
+      ctx.font = "bold 13px 'JetBrains Mono', monospace";
+      const padding = 5;
+      const textW = ctx.measureText(label).width;
+      const boxW = textW + padding * 2;
+      const boxH = 20;
+      const bx = r.x;
+      const by = Math.max(0, r.y - boxH);
+      ctx.fillStyle = color;
+      ctx.fillRect(bx, by, boxW, boxH);
+      ctx.fillStyle = "#0a0a0f";
+      ctx.fillText(label, bx + padding, by + boxH - 6);
+    });
+  }
+
+  function renderRegionMarkers() {
+    if (!lastCanvasA || !lastCanvasB) return;
+    const sideA = document.getElementById("canvas-side-a");
+    const sideB = document.getElementById("canvas-side-b");
+    sideA.getContext("2d").drawImage(lastCanvasA, 0, 0);
+    sideB.getContext("2d").drawImage(lastCanvasB, 0, 0);
+    if (!showMarkers) return;
+    drawMarkersOnCanvas(sideA);
+    drawMarkersOnCanvas(sideB);
+  }
+
+  function selectRegion(id) {
+    selectedRegionId = (selectedRegionId === id) ? null : id;
+    renderRegionMarkers();
+    renderFindingsList();
+    if (selectedRegionId !== null && currentMode !== "side") setMode("side");
+  }
+
+  function wireCanvasRegionClicks(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    function findHit(e) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (e.clientX - rect.left) * scaleX;
+      const y = (e.clientY - rect.top) * scaleY;
+      return diffRegions.find(function (r) { return x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h; });
+    }
+    canvas.addEventListener("click", function (e) {
+      const hit = findHit(e);
+      if (hit) selectRegion(hit.id);
+    });
+    canvas.addEventListener("mousemove", function (e) {
+      canvas.style.cursor = findHit(e) ? "pointer" : "default";
+    });
+  }
+  wireCanvasRegionClicks("canvas-side-a");
+  wireCanvasRegionClicks("canvas-side-b");
+
+  // ---------- Findings list ----------
+  function renderFindingsList() {
+    const panel = document.getElementById("findings-panel");
+    const list = document.getElementById("findings-list");
+    const empty = document.getElementById("findings-empty");
+    const summary = document.getElementById("findings-summary");
+    list.innerHTML = "";
+    panel.style.display = "block";
+
+    if (!diffRegions.length) {
+      empty.style.display = "block";
+      summary.innerHTML = "";
+      return;
+    }
+    empty.style.display = "none";
+
+    const counts = { major: 0, moderate: 0, minor: 0 };
+    diffRegions.forEach(function (r) { counts[r.severity]++; });
+    summary.innerHTML =
+      '<span class="sev-chip major">' + counts.major + ' major</span>' +
+      '<span class="sev-chip moderate">' + counts.moderate + ' moderate</span>' +
+      '<span class="sev-chip minor">' + counts.minor + ' minor</span>';
+
+    diffRegions.forEach(function (r) {
+      const row = document.createElement("div");
+      row.className = "finding-item" + (selectedRegionId === r.id ? " selected" : "");
+      row.innerHTML =
+        '<span class="finding-num sev-' + r.severity + '">' + r.id + '</span>' +
+        '<span class="finding-swatches">' +
+          '<span class="swatch" style="background:' + r.colorA + '" title="A: ' + r.colorA + '"></span>' +
+          '<span class="swatch" style="background:' + r.colorB + '" title="B: ' + r.colorB + '"></span>' +
+        '</span>' +
+        '<span class="finding-body">' +
+          '<span class="finding-label">' + r.label + '</span>' +
+          '<span class="finding-meta">' + r.w + '×' + r.h + ' px at (' + r.x + ', ' + r.y + ')  ·  ' + r.areaPct.toFixed(2) + '% of frame</span>' +
+        '</span>';
+      row.addEventListener("click", function () { selectRegion(r.id); });
+      list.appendChild(row);
+    });
+  }
+
+  document.getElementById("copy-report-btn").addEventListener("click", function () {
+    const btn = document.getElementById("copy-report-btn");
+    const original = btn.textContent;
+    const text = diffRegions.length
+      ? "Coral diff report\n" + diffRegions.map(function (r) {
+          return "#" + r.id + " [" + r.severity.toUpperCase() + "] " + r.label + " — " +
+            r.w + "×" + r.h + "px at (" + r.x + ", " + r.y + "), " + r.areaPct.toFixed(2) +
+            "% of frame. A=" + r.colorA + " B=" + r.colorB;
+        }).join("\n")
+      : "Coral diff report\nNo meaningful differences detected.";
+    navigator.clipboard.writeText(text).then(function () {
+      btn.textContent = "Copied ✓";
+      setTimeout(function () { btn.textContent = original; }, 1500);
+    }).catch(function () {});
+  });
+
+  // ---------- Mode switching ----------
+  const modeSwitch = document.getElementById("mode-switch");
+  const modeIndicator = document.getElementById("mode-indicator");
+
+  function positionModeIndicator(btn) {
+    const wrapRect = modeSwitch.getBoundingClientRect();
+    const rect = btn.getBoundingClientRect();
+    modeIndicator.style.left = (rect.left - wrapRect.left) + "px";
+    modeIndicator.style.width = rect.width + "px";
+  }
+
+  document.querySelectorAll(".mode-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () { setMode(btn.dataset.mode); });
+  });
+
+  function setMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll(".mode-btn").forEach(function (b) {
+      b.classList.toggle("active", b.dataset.mode === mode);
+      if (b.dataset.mode === mode) positionModeIndicator(b);
+    });
+    ["slider", "side", "overlay", "heatmap"].forEach(function (m) {
+      document.getElementById("view-" + m).style.display = (m === mode) ? "" : "none";
+    });
+    document.getElementById("overlay-controls").style.display = (mode === "overlay") ? "flex" : "none";
+    document.getElementById("heatmap-controls").style.display = (mode === "heatmap") ? "flex" : "none";
+  }
+
+  // ---------- Slider drag ----------
+  const sliderWrap = document.getElementById("view-slider");
+  const sliderHandle = document.getElementById("slider-handle");
+  const canvasTopEl = document.getElementById("canvas-top");
+  let dragging = false;
+
+  function resetSlider() {
+    sliderHandle.style.left = "50%";
+    canvasTopEl.style.clipPath = "inset(0 50% 0 0)";
+  }
+
+  function moveSliderTo(clientX) {
+    const rect = sliderWrap.getBoundingClientRect();
+    let pct = ((clientX - rect.left) / rect.width) * 100;
+    pct = Math.max(0, Math.min(100, pct));
+    sliderHandle.style.left = pct + "%";
+    canvasTopEl.style.clipPath = "inset(0 " + (100 - pct) + "% 0 0)";
+  }
+
+  sliderHandle.addEventListener("mousedown", function (e) { dragging = true; e.preventDefault(); });
+  window.addEventListener("mousemove", function (e) { if (dragging) moveSliderTo(e.clientX); });
+  window.addEventListener("mouseup", function () { dragging = false; });
+  sliderWrap.addEventListener("click", function (e) { moveSliderTo(e.clientX); });
+  sliderHandle.addEventListener("touchstart", function () { dragging = true; }, { passive: true });
+  window.addEventListener("touchmove", function (e) { if (dragging && e.touches[0]) moveSliderTo(e.touches[0].clientX); }, { passive: true });
+  window.addEventListener("touchend", function () { dragging = false; });
+
+  // ---------- Download ----------
+  document.getElementById("download-btn").addEventListener("click", function () {
+    let canvas;
+    if (currentMode === "slider") canvas = document.getElementById("canvas-bottom");
+    else if (currentMode === "side") {
+      const a = document.getElementById("canvas-side-a");
+      const b = document.getElementById("canvas-side-b");
+      const merged = document.createElement("canvas");
+      merged.width = a.width * 2 + 20;
+      merged.height = a.height;
+      const ctx = merged.getContext("2d");
+      ctx.fillStyle = "#06070c";
+      ctx.fillRect(0, 0, merged.width, merged.height);
+      ctx.drawImage(a, 0, 0);
+      ctx.drawImage(b, a.width + 20, 0);
+      canvas = merged;
+    }
+    else if (currentMode === "overlay") canvas = document.getElementById("canvas-overlay-base");
+    else canvas = document.getElementById("canvas-heatmap");
+
+    try {
+      const link = document.createElement("a");
+      link.download = "coral-diff-" + currentMode + ".png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (e) {
+      alert("Could not export this view — likely due to cross-origin image data. Try the Images tab.");
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>
